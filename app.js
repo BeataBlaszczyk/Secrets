@@ -6,7 +6,10 @@ const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = express();
-const encrypt = require("mongoose-encryption");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
+//const md5 = require('md5');
+//const encrypt = require("mongoose-encryption");
 
 
 app.use(express.static("public"));
@@ -24,8 +27,8 @@ const userSchema = new mongoose.Schema({
   password: String
 });
 
-const secret = "Thisisourlittlesecret."
-userSchema.plugin(encrypt, {secret:process.env.SECRET, encryptedFields: ['password']});
+//const secret = "Thisisourlittlesecret."
+//userSchema.plugin(encrypt, {secret:process.env.SECRET, encryptedFields: ['password']});
 
 const User = new mongoose.model("User", userSchema);
 
@@ -44,26 +47,30 @@ app.get("/register", function(req, res) {
 
 app.post("/register", function(req, res) {
 
-  const newUser = new User({
-    email: req.body.username,
-    password: req.body.password
-  })
+  bcrypt.hash(req.body.password, saltRounds, function(err, hash){
+    const newUser = new User({
+      email: req.body.username,
+      password: hash //md5(req.body.password)
+    })
 
-  newUser.save(function(err) {
-    if (!err) {
-      console.log("Successfully register new user")
-      res.render("secrets");
-    } else {
-      console.log(err)
-    }
+    newUser.save(function(err) {
+      if (!err) {
+        console.log("Successfully register new user")
+        res.render("secrets");
+      } else {
+        console.log(err)
+      }
+    });
   });
+
+
 
 });
 
 app.post("/login", function(req, res) {
   const email = req.body.username;
   const password = req.body.password;
-  console.log(email + password)
+
   User.findOne({
     email: email
   }, function(err, result) {
@@ -71,11 +78,13 @@ app.post("/login", function(req, res) {
       console.log(err)
     } else {
       if (result) {
-        if (result.password === password) {
-          res.render("secrets");
-        } else {
-          console.log("ups. smth went wrong")
-        }
+        bcrypt.compare(password, result.password , function(err, response){
+          if (result){
+            res.render("secrets")
+          }else{
+            console.log("ups")
+          }
+        })
       } else {
         console.log("there is no such user ")
       }
