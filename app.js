@@ -25,20 +25,14 @@ app.use(express.static("public"));
 app.set('view engine', 'ejs');
 
 // redis@v4
-const { createClient } = require("redis")
-let redisClient = createClient({ legacyMode: true })
-redisClient.connect().catch(console.error)
+//const { createClient } = require("redis")
+//let redisClient = createClient({ legacyMode: true })
+//redisClient.connect().catch(console.error)
 
-// redis@v3
-const { createClient } = require("redis")
-let redisClient = createClient()
 
-// ioredis
-const Redis = require("ioredis")
-let redisClient = new Redis()
 
 app.use(session({
-  store: new RedisStore({ client: redisClient }),
+  //store: new RedisStore({ client: redisClient }),
   secret: "our little secret.",
   resave: false,
   saveUninitialized: false
