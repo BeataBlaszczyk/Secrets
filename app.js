@@ -13,6 +13,7 @@ const app = express();
 //const encrypt = require("mongoose-encryption");
 
 const session = require("express-session");
+let RedisStore = require("connect-redis")(session)
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose")
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -22,7 +23,22 @@ const findOrCreate = require("mongoose-findorcreate");
 
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
+
+// redis@v4
+const { createClient } = require("redis")
+let redisClient = createClient({ legacyMode: true })
+redisClient.connect().catch(console.error)
+
+// redis@v3
+const { createClient } = require("redis")
+let redisClient = createClient()
+
+// ioredis
+const Redis = require("ioredis")
+let redisClient = new Redis()
+
 app.use(session({
+  store: new RedisStore({ client: redisClient }),
   secret: "our little secret.",
   resave: false,
   saveUninitialized: false
