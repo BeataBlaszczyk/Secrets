@@ -52,7 +52,7 @@ app.use(bodyParser.urlencoded({
 mongoose.connect("mongodb+srv://admin-beata:mleczyk123@cluster0.yu0at.mongodb.net/userDB", {
   useNewUrlParser: true
 });
-mongoose.set('useCreateIndex', true);
+
 
 const userSchema = new mongoose.Schema({
   email: String,
