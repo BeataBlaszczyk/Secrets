@@ -13,7 +13,7 @@ const app = express();
 //const encrypt = require("mongoose-encryption");
 
 const session = require("express-session");
-let RedisStore = require("connect-redis")(session)
+//let RedisStore = require("connect-redis")(session)
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose")
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
