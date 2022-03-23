@@ -52,6 +52,7 @@ app.use(bodyParser.urlencoded({
 mongoose.connect("mongodb+srv://admin-beata:mleczyk123@cluster0.yu0at.mongodb.net/userDB", {
   useNewUrlParser: true
 });
+mongoose.set('useCreateIndex', true);
 
 const userSchema = new mongoose.Schema({
   email: String,
@@ -87,7 +88,8 @@ passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     callbackURL: "https://desolate-forest-24784.herokuapp.com/auth/google/secrets",
-    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+    userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
+    enableProof: true
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
@@ -99,7 +101,8 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "https://desolate-forest-24784.herokuapp.com/auth/facebook/secrets"
+    callbackURL: "https://desolate-forest-24784.herokuapp.com/auth/facebook/secrets",
+    enableProof: true
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ facebookId: profile.id }, function (err, user) {
@@ -109,7 +112,7 @@ passport.use(new FacebookStrategy({
 ));
 
 app.get('/auth/facebook',
-
+console.log("hestem w auth/fb")
   passport.authenticate('facebook', { scope: 'public_profile'})
 
 );
