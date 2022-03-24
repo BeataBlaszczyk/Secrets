@@ -24,10 +24,6 @@ const findOrCreate = require("mongoose-findorcreate");
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 
-// redis@v4
-//const { createClient } = require("redis")
-//let redisClient = createClient({ legacyMode: true })
-//redisClient.connect().catch(console.error)
 
 
 
