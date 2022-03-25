@@ -56,6 +56,14 @@ const userSchema = new mongoose.Schema({
   facebookId: String
 });
 
+
+
+const secretSchema = new mongoose.Schema({
+  content: String,
+  rating: Number
+
+})
+
 userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
 
@@ -63,6 +71,7 @@ userSchema.plugin(findOrCreate);
 //userSchema.plugin(encrypt, {secret:process.env.SECRET, encryptedFields: ['password']});
 
 const User = new mongoose.model("User", userSchema);
+const Secret = new mongoose.model("Secret", secretSchema);
 
 passport.use(User.createStrategy());
 //passport.serializeUser(User.serializeUser());
@@ -119,6 +128,32 @@ app.get('/auth/facebook/secrets',
     res.redirect('/secrets');
   });
 
+
+app.get("/submit",function(req, res){
+  if (req.isAuthenticated()){
+  res.render("submit")
+  }else{
+    res.redirect("/login")
+  }
+
+
+ })
+
+ app.post("/submit",function(req, res){
+   console.log(req.body.secret);
+
+   const secret = new Secret({
+     content: req.body.secret,
+     rating: 0
+   })
+
+ secret.save();
+ Secret.update();
+
+   res.redirect("secrets")
+
+
+  })
 
 app.get('/auth/google',
   passport.authenticate('google', { scope: ['profile'] }));
@@ -177,7 +212,17 @@ User.register({username:req.body.username}, req.body.password, function(err, use
 
 app.get("/secrets", function(req,res){
   if (req.isAuthenticated()){
-    res.render("secrets");
+
+Secret.find(function(err, foundSecrets){
+  if (foundSecrets){
+    console.log(foundSecrets)
+      res.render("secrets", {secrets:foundSecrets});
+  }
+})
+
+
+
+
   }else{
     res.redirect("/login")
   }

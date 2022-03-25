@@ -8,9 +8,49 @@ body {
     text-align: center;
 }
 
+.secret-container{
+    background-color: #000;
+
+}
+
 .secret-text {
+
   text-align: center;
   font-size: 2rem;
   color: #fff;
-  background-color: #000;
+background: transparent;
+
+}
+
+.rating{
+  color:white;
+}
+
+.myGrid{
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  float: right;
+}
+
+.fire{
+
+font-size: 1.3rem;
+float: right;
+
+background: transparent;
+}
+
+
+.thumbUp{
+  content: url("thumbUp.png");
+  float: right;
+  height: 22px;
+  
+}
+.thumbDown{
+  content: url("thumbDown.png");
+  float: right;
+  height: 22px;
+
 }
